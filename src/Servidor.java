@@ -1,12 +1,19 @@
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 
 public class Servidor {
-	int port;
 	String thisAdress;
 	static ServerSocket socket;
+	int      port;
+    String   address;
+    Registry objetoChat;
 	
 	public void criarConfigurarPorta() {
 		try {
@@ -17,13 +24,31 @@ public class Servidor {
 		}
 	}
 	
+	public Servidor() throws RemoteException {
+		try{
+            // get the address of this host.
+            address= (InetAddress.getLocalHost()).toString();
+        }
+        catch(Exception e){
+            throw new RemoteException("can't get inet address.");
+        }
+        port=1324;  // this port(registrys port)
+        System.out.println("this address="+address+",port="+port);
+        try{
+        // create the registry and bind the name and object.
+        	objetoChat = LocateRegistry.createRegistry( port );
+        	objetoChat.rebind("ObjetoChat", (Remote) this);
+        }
+        catch(RemoteException e){
+        throw e;
+        }
+	}
+	
 	 public static void main(String[] args) throws IOException {
-	        
-	        
-	        while(true){
-	           //pegar registro de todos os clientes
-	        	//obs: criar objeto static
-	        	//enviar msgs para todos os clientes
+		
+		 while(true){
+	            Thread t = new Thread(new Tratamento());
+	            t.start();
 	        }
-	    }
+	 }
 }

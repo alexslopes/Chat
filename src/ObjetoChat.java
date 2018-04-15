@@ -14,7 +14,7 @@ public class ObjetoChat extends UnicastRemoteObject implements IObjetoChat{
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void registrar(String ip) {
+	public void registrar(String ip, String port) {
 		// TODO Auto-generated method stub
 		
 	}
